@@ -1,6 +1,4 @@
 # DoomLauncher
-Speedrunning launcher for DOOM (1993)
-
 Early version of launcher for DOOM (1993) for speedrunning purposes.
 
 This version allows to choose Doom's WAD file, directory of <a href ="https://www.chocolate-doom.org/wiki/index.php/Crispy_Doom">crisp-doom.exe</a> (also works with <a href="https://www.chocolate-doom.org/wiki/index.php/Chocolate_Doom">chocolate-doom.exe</a>) and config file for Doom (usually default.cfg in crisp doom folder).
