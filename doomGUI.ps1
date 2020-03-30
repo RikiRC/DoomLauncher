@@ -64,7 +64,7 @@ $chooseEpisode.Items.Add("Knee Deep in the Dead") | Out-Null
 $chooseEpisode.Items.Add("Shores of Hell") | Out-Null
 $chooseEpisode.Items.Add("Inferno") | Out-Null
 $chooseEpisode.Items.Add("The Flesh Consumed") | Out-Null
-$chooseEpisode.SelectedIndex = 0
+$chooseEpisode.SelectedIndex = $config.startingEpisode
 
 $chooseDifficulty = New-Object system.Windows.Forms.ComboBox
 $chooseDifficulty.Width = 150
@@ -75,7 +75,7 @@ $chooseDifficulty.Items.Add("Hey, not too rough") | Out-Null
 $chooseDifficulty.Items.Add("Hurt me plenty") | Out-Null
 $chooseDifficulty.Items.Add("Ultra-Violence") | Out-Null
 $chooseDifficulty.Items.Add("Nightmare!") | Out-Null
-$chooseDifficulty.SelectedIndex = 0
+$chooseDifficulty.SelectedIndex = $config.difficulty
 
 $chooseFast = New-Object system.Windows.Forms.ComboBox
 $chooseFast.Width = 100
@@ -83,7 +83,7 @@ $chooseFast.Height = 50
 $chooseFast.Location = New-Object System.Drawing.Point(250,130)
 $chooseFast.Items.Add("No") | Out-Null
 $chooseFast.Items.Add("Yes") | Out-Null
-$chooseFast.SelectedIndex = 0
+$chooseFast.SelectedIndex = $config.fast
 
 $chooseRespawn = New-Object system.Windows.Forms.ComboBox
 $chooseRespawn.Width = 100
@@ -91,7 +91,7 @@ $chooseRespawn.Height = 50
 $chooseRespawn.Location = New-Object System.Drawing.Point(250,180)
 $chooseRespawn.Items.Add("No") | Out-Null
 $chooseRespawn.Items.Add("Yes") | Out-Null
-$chooseRespawn.SelectedIndex = 0
+$chooseRespawn.SelectedIndex = $config.respawn
 
 $chooseMonsters = New-Object system.Windows.Forms.ComboBox
 $chooseMonsters.Width = 100
@@ -99,7 +99,7 @@ $chooseMonsters.Height = 50
 $chooseMonsters.Location = New-Object System.Drawing.Point(250,230)
 $chooseMonsters.Items.Add("No") | Out-Null
 $chooseMonsters.Items.Add("Yes") | Out-Null
-$chooseMonsters.SelectedIndex = 0
+$chooseMonsters.SelectedIndex = $config.noMonsters
 
 $chooseRecording = New-Object system.Windows.Forms.ComboBox
 $chooseRecording.Width = 100
@@ -107,7 +107,7 @@ $chooseRecording.Height = 50
 $chooseRecording.Location = New-Object System.Drawing.Point(250,280)
 $chooseRecording.Items.Add("No") | Out-Null
 $chooseRecording.Items.Add("Yes") | Out-Null
-$chooseRecording.SelectedIndex = 0
+$chooseRecording.SelectedIndex = $config.recordDemo
 
 $handler_chooseWADbtn = 
 {
@@ -146,11 +146,23 @@ $handler_updateConfigBtn =
     "wadLocation = $($WADNameLbl.Text.Replace("\", "\\"))" >> config.ini
     "crispyDoomLocation = $($crispDoomLocation.Text.Replace("\", "\\"))" >> config.ini
     "configFileLocation = $($crispDoomConfigLbl.Text.Replace("\", "\\"))" >> config.ini
+    "startingEpisode = $($chooseEpisode.SelectedIndex)" >> config.ini
+    "difficulty = $($chooseDifficulty.SelectedIndex)" >> config.ini
+    "fast = $($chooseFast.SelectedIndex)" >> config.ini
+    "respawn = $($chooseRespawn.SelectedIndex)" >> config.ini
+    "noMonsters = $($chooseMonsters.SelectedIndex)" >> config.ini
+    "recordDemo = $($chooseRecording.SelectedIndex)" >> config.ini
 }
 Function LaunchCrisp($skill, $episode, $noMonsters, $record, $fast, $respawn)
 {
     $path = $crispDoomLocation.Text | Get-ChildItem
     Set-Location $path.DirectoryName | Out-Null
+
+    $testDemosFolder = Test-Path Demos
+    If ($testDemosFolder -eq $False)
+    {
+        New-Item -ItemType Directory -Path .\Demos
+    }
 
     $params = "-config $($crispDoomConfigLbl.Text) -IWAD $($WADNameLbl.Text) -skill $($skill + 1) -longtics -episode $($episode + 1)"
 
@@ -237,7 +249,7 @@ $launchCrispDoomBtn.Visible = $True
 $launchCrispDoomBtn.add_Click($handler_launchCrispDoom)
 
 $updateConfigBtn = New-Object system.Windows.Forms.Button
-$updateConfigBtn.Text = "Update config.ini"
+$updateConfigBtn.Text = "Save launcher's config"
 $updateConfigBtn.Width = 100
 $updateConfigBtn.Height = 50
 $updateConfigBtn.Location = New-Object System.Drawing.Point(375,170)
