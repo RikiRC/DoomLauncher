@@ -5,7 +5,7 @@ $config = get-content config.ini | ConvertFrom-StringData
 
 $doomLauncher = New-Object system.Windows.Forms.Form
 $doomLauncher.ClientSize = "500,320"
-$doomLauncher.text = "DOOM UV Speedrun Launcher"
+$doomLauncher.text = "DOOM Speedrun Launcher"
 $doomLauncher.FormBorderStyle = "FixedSingle"
 
 $WADNameLbl = New-Object System.Windows.Forms.Label
@@ -175,9 +175,6 @@ Function LaunchCrisp($skill, $episode, $noMonsters, $record, $fast, $respawn)
         $filename = "Demos/" + $date.Day.ToString() + $date.Month.ToString() + $date.Year.ToString() + $date.Hour.ToString() + $date.Minute.ToString() + $date.Second.ToString()
         $params += " -record $($filename)"
     }
-
-    Write-Host $params
-
     Start-Process -FilePath $crispDoomLocation.Text -ArgumentList $params
 }
 
